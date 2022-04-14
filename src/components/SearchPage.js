@@ -7,6 +7,7 @@ const SearchPage = () => {
     const [searchVal, setSearchVal] = useState('')
     const [seletedVal, setSeletedVal] = useState('');
     const [book, setBook] = useState({})
+    const [error, setError] = useState("")
 
     const getAllBooks = () => {
         BooksAPI.getAll().then(data => setGetAllData(data));
@@ -14,23 +15,28 @@ const SearchPage = () => {
 
     const handleChange = (e) => {
         setSearchVal(e.target.value.trim())
-        BooksAPI.search(e.target.value.trim()).then(data => {
-            if (e.target.value === '') {
-                setData([])
-            } else {
-                let newDate = data.filter((book, i) => book.hasOwnProperty('imageLinks'))
-                setData(newDate);
-                data.forEach((book, i) => {
-                    book.shelf = "none"
-                    for (let homeData in getAllData) {
-                        if (book.id === getAllData[homeData].id) {
-                            book.shelf = getAllData[homeData].shelf
+        if (e.target.value === '') {
+            setData([])
+        } else {
+            BooksAPI.search(e.target.value.trim()).then(data => {
+                if (!data.error) {
+                    let newDate = data.filter((book, i) => book.hasOwnProperty('imageLinks'))
+                    setData(newDate);
+                    data.forEach((book, i) => {
+                        book.shelf = "none"
+                        for (let homeData in getAllData) {
+                            if (book.id === getAllData[homeData].id) {
+                                book.shelf = getAllData[homeData].shelf
+                            }
                         }
-                    }
-                })
+                    })
+                    setError("")
+                } else {
+                    setError("Enter a valid data")
+                }
+            })
+        }
 
-            }
-        })
     }
     const handleSelection = (book, e) => {
         setSeletedVal(e.target.value)
@@ -38,11 +44,9 @@ const SearchPage = () => {
             book.shelf = e.target.value
             setBook(book)
             updateApi(book, e.target.value)
-            console.log(book, "has shelf")
         } else {
             book.shelf = e.target.value
             setBook(book)
-            console.log(book, "update book")
             updateApi(book, e.target.value)
 
 
@@ -70,7 +74,7 @@ const SearchPage = () => {
             </div>
             <div className="search-books-results">
                 <ol className="books-grid">
-                    {data?.map(book => {
+                    {error ? error : (data?.map(book => {
                         return <li key={book.id}>
                             <div className="book">
                                 <div className="book-top">
@@ -88,9 +92,8 @@ const SearchPage = () => {
                                 <div className="book-title">{book.title}</div>
                                 <div className="book-authors">{book.authors?.map((author, i) => <p key={i} className='author'>{author}</p>)}</div>
                             </div>
-
                         </li>
-                    })}
+                    }))}
                 </ol>
             </div>
         </div>
