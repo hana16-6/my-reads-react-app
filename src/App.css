@@ -218,3 +218,8 @@ button:active {
   width: 80%;
   margin: 0 auto;
 }
+.book-info{
+    position: absolute;
+    right: 134px;
+    bottom: 16px;
+}

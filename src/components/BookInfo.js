@@ -20,7 +20,7 @@ const BookInfo = () => {
             <div className="book-details">
                 <div className="book-details-top">
                     <div className="book-cover" style={{ width: 154, height: 230, backgroundRepeat: "no-repeat", backgroundSize: "110%", backgroundImage: `url(${book?.imageLinks.thumbnail})` }}></div>
-                    <div className="book-shelf-changer">
+                    <div className="book-shelf-changer book-info">
                         <select onChange={handleChange} value={book?.shelf}>
                             <option value="move" disabled>Move to...</option>
                             <option value="currentlyReading">Currently Reading</option>
