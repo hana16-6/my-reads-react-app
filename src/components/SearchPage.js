@@ -9,7 +9,7 @@ const SearchPage = () => {
     const [book, setBook] = useState({})
 
     const getAllBooks = () => {
-        BooksAPI.getAll().then(data => setGetAllData(data.filter(book => book.shelf)));
+        BooksAPI.getAll().then(data => setGetAllData(data));
     }
 
     const handleChange = (e) => {
@@ -21,6 +21,7 @@ const SearchPage = () => {
                 let newDate = data.filter((book, i) => book.hasOwnProperty('imageLinks'))
                 setData(newDate);
                 data.forEach((book, i) => {
+                    book.shelf = "none"
                     for (let homeData in getAllData) {
                         if (book.id === getAllData[homeData].id) {
                             book.shelf = getAllData[homeData].shelf
@@ -34,12 +35,16 @@ const SearchPage = () => {
     const handleSelection = (book, e) => {
         setSeletedVal(e.target.value)
         if (book.hasOwnProperty('shelf')) {
-            setBook(book)
-            updateApi(book, e.target.value)
-        } else {
             book.shelf = e.target.value
             setBook(book)
             updateApi(book, e.target.value)
+            console.log(book, "has shelf")
+        } else {
+            book.shelf = e.target.value
+            setBook(book)
+            console.log(book, "update book")
+            updateApi(book, e.target.value)
+
 
         }
     }
